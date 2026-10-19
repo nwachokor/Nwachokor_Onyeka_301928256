@@ -30,11 +30,13 @@ Meridon sells its own stock rather than acting as a marketplace for other seller
 
 ## Business rules
 Products
+
 1. Every product is either a human or a pet product.
 2. A pet product must have a species (dog or cat), whereas a human product has no species.
 3. A product's price must be greater than zero.
 
 Stock
+
 4. Stock is held in batches. Each batch belongs to one product and one warehouse.
 5. A batch's quantity can never be negative.
 6. A batch's expiry date must be later than the date it was received.
@@ -42,6 +44,7 @@ Stock
 8. When an order is placed, stock is taken from the batch with the earliest expiry date first.
 
 Orders and payments
+
 9. Every order belongs to one customer and contains at least one product, each with a quantity of at least 1.
 10. Each order is fulfilled from one warehouse.
 11. The price paid for each product is recorded on the order, so later price changes do not alter past orders.
@@ -50,11 +53,13 @@ Orders and payments
 14. An order is not dispatched until its payment has succeeded.
 
 Deliveries
+
 15. Each order has one delivery, assigned to one rider.
 16. Delivery status moves only forward: assigned → picked up → delivered.
 17. A delivery can only be marked delivered when the rider enters the code that matches the one sent to the customer.
 
 Customers
+
 18. Each customer's email address is unique.
 
 ## Scope
