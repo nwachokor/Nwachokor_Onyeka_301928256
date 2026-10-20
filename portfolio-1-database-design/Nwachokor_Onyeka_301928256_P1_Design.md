@@ -97,11 +97,11 @@ PK = primary key, FK = foreign key.
 - Product keeps both category and species; species is empty for human. 
 - - Reason: Human products have no species so that column is left empty = NULL
 - Staff passwords are stored as password_hash. 
-- - Reason:  If we store password as type, in cases of databse leak, the password leaks but as hash, the password is scrambld on way, the system can check a password against an hash but not the other way round, noody can turn an hash to a password. 
+- - Reason:  If we store password as typed, in cases of database leak, the password leaks but as hash, the password is scrambled on way, the system can check a password against a hash but not the other way round, nobody can turn a hash to a password. 
 - Orders stores its own delivery_address. 
 - - Reason: The order will go to the address provided at time order was placed because customers could move houses and will want to set a different address
 - Delivery records assigned_by_staff_id. 
-- - Reason: This record will help if something goes wrong, we can trce it back to the staff who carried the action. 
+- - Reason: This record will help if something goes wrong, we can trace it back to the staff who carried the action. 
 - The table is called orders, not order, because ORDER is a reserved word in SQL.
 
 
