@@ -103,6 +103,7 @@ PK = primary key, FK = foreign key.
 - Delivery records assigned_by_staff_id. 
 - - Reason: This record will help if something goes wrong, we can trace it back to the staff who carried the action. 
 - The table is called orders, not order, because ORDER is a reserved word in SQL.
+- - The ER diagram and design files use readable names like StockBatch and OrderItem. The SQL uses Postgres-style lowercase names with underscores, like stock_batch and order_item, so the two refer to the same tables.
 
 
 
