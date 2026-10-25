@@ -1,0 +1,26 @@
+Q5 Best sellers, before indexes
+
+QUERY PLAN                                                                     
+---------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=3428.70..3428.72 rows=10 width=23) (actual time=25.503..25.509 rows=10 loops=1)
+   ->  Sort  (cost=3428.70..3429.20 rows=200 width=23) (actual time=25.495..25.499 rows=10 loops=1)
+         Sort Key: (sum(oi.quantity)) DESC
+         Sort Method: top-N heapsort  Memory: 26kB
+         ->  HashAggregate  (cost=3422.38..3424.38 rows=200 width=23) (actual time=25.443..25.465 rows=200 loops=1)
+               Group Key: p.product_id
+               Batches: 1  Memory Usage: 48kB
+               ->  Hash Join  (cost=1401.25..3380.98 rows=8280 width=19) (actual time=10.156..24.380 rows=8232 loops=1)
+                     Hash Cond: (oi.product_id = p.product_id)
+                     ->  Hash Join  (cost=1394.75..3352.28 rows=8280 width=8) (actual time=10.019..23.159 rows=8232 loops=1)
+                           Hash Cond: (oi.order_id = o.order_id)
+                           ->  Seq Scan on order_item oi  (cost=0.00..1695.01 rows=100001 width=12) (actual time=0.004..5.245 rows=100001 loops=1)
+                           ->  Hash  (cost=1343.00..1343.00 rows=4140 width=4) (actual time=9.984..9.985 rows=4102 loops=1)
+                                 Buckets: 8192  Batches: 1  Memory Usage: 209kB
+                                 ->  Seq Scan on orders o  (cost=0.00..1343.00 rows=4140 width=4) (actual time=0.008..9.363 rows=4102 loops=1)
+                                       Filter: (order_date >= (now() - '30 days'::interval))
+                                       Rows Removed by Filter: 45898
+                     ->  Hash  (cost=4.00..4.00 rows=200 width=15) (actual time=0.131..0.131 rows=200 loops=1)
+                           Buckets: 1024  Batches: 1  Memory Usage: 18kB
+                           ->  Seq Scan on product p  (cost=0.00..4.00 rows=200 width=15) (actual time=0.009..0.037 rows=200 loops=1)
+ Planning Time: 0.415 ms
+ Execution Time: 25.561 ms

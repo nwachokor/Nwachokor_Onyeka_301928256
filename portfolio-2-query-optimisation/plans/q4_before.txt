@@ -1,0 +1,14 @@
+Q4 Daily revenue, before indexes
+
+QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ GroupAggregate  (cost=1643.93..1728.74 rows=3387 width=44) (actual time=13.212..14.125 rows=31 loops=1)
+   Group Key: (date(paid_at))
+   ->  Sort  (cost=1643.93..1652.43 rows=3400 width=12) (actual time=13.146..13.483 rows=3791 loops=1)
+         Sort Key: (date(paid_at))
+         Sort Method: quicksort  Memory: 245kB
+         ->  Seq Scan on payment  (cost=0.00..1444.50 rows=3400 width=12) (actual time=0.020..12.319 rows=3791 loops=1)
+               Filter: ((status = 'success'::text) AND (paid_at >= (CURRENT_DATE - '30 days'::interval)))
+               Rows Removed by Filter: 46209
+ Planning Time: 0.152 ms
+ Execution Time: 14.160 ms

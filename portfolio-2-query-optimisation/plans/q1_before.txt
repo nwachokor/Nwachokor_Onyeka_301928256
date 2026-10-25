@@ -1,0 +1,12 @@
+Q1 Stock picking, before indexes
+
+QUERY PLAN                                                   
+---------------------------------------------------------------------------------------------------------------
+ Sort  (cost=58.06..58.07 rows=5 width=16) (actual time=0.124..0.125 rows=8 loops=1)
+   Sort Key: expiry_date
+   Sort Method: quicksort  Memory: 25kB
+   ->  Seq Scan on stock_batch  (cost=0.00..58.00 rows=5 width=16) (actual time=0.022..0.116 rows=8 loops=1)
+         Filter: ((quantity > 0) AND (product_id = 1) AND (warehouse_id = 1) AND (expiry_date > CURRENT_DATE))
+         Rows Removed by Filter: 1992
+ Planning Time: 0.110 ms
+ Execution Time: 0.140 ms

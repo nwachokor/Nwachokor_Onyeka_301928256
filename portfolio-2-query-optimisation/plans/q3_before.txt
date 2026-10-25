@@ -1,0 +1,17 @@
+Q2 Rider workload, before indexes
+
+QUERY PLAN                                                           
+--------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=2334.75..2338.93 rows=1673 width=44) (actual time=19.568..19.709 rows=1666 loops=1)
+   Sort Key: d.assigned_at
+   Sort Method: quicksort  Memory: 179kB
+   ->  Hash Join  (cost=1145.91..2245.17 rows=1673 width=44) (actual time=10.428..19.083 rows=1666 loops=1)
+         Hash Cond: (o.order_id = d.order_id)
+         ->  Seq Scan on orders o  (cost=0.00..968.00 rows=50000 width=23) (actual time=0.007..3.432 rows=50000 loops=1)
+         ->  Hash  (cost=1125.00..1125.00 rows=1673 width=25) (actual time=10.403..10.404 rows=1666 loops=1)
+               Buckets: 2048  Batches: 1  Memory Usage: 121kB
+               ->  Seq Scan on delivery d  (cost=0.00..1125.00 rows=1673 width=25) (actual time=0.010..9.907 rows=1666 loops=1)
+                     Filter: ((status <> 'delivered'::text) AND (rider_id = 3))
+                     Rows Removed by Filter: 43334
+ Planning Time: 0.278 ms
+ Execution Time: 19.787 ms

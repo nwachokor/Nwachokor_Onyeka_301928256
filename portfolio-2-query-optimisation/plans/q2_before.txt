@@ -1,0 +1,21 @@
+Q2 Order history, before indexes
+
+QUERY PLAN                                                                                     
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=1215.39..1215.42 rows=10 width=44) (actual time=4.151..4.154 rows=10 loops=1)
+   ->  Sort  (cost=1215.39..1215.42 rows=10 width=44) (actual time=4.149..4.151 rows=10 loops=1)
+         Sort Key: o.order_date DESC
+         Sort Method: quicksort  Memory: 25kB
+         ->  GroupAggregate  (cost=1214.85..1215.23 rows=10 width=44) (actual time=4.120..4.141 rows=11 loops=1)
+               Group Key: o.order_id
+               ->  Sort  (cost=1214.85..1214.90 rows=20 width=24) (actual time=4.105..4.108 rows=24 loops=1)
+                     Sort Key: o.order_id
+                     Sort Method: quicksort  Memory: 26kB
+                     ->  Nested Loop  (cost=0.42..1214.42 rows=20 width=24) (actual time=0.211..4.074 rows=24 loops=1)
+                           ->  Seq Scan on orders o  (cost=0.00..1093.00 rows=10 width=12) (actual time=0.194..3.927 rows=11 loops=1)
+                                 Filter: (customer_id = 42)
+                                 Rows Removed by Filter: 49989
+                           ->  Index Scan using order_item_order_id_product_id_key on order_item oi  (cost=0.42..12.12 rows=2 width=16) (actual time=0.008..0.009 rows=2 loops=11)
+                                 Index Cond: (order_id = o.order_id)
+ Planning Time: 0.496 ms
+ Execution Time: 4.225 ms
