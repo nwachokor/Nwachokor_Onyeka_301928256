@@ -1,63 +1,38 @@
 # Meridon Store Normalisation
 
-Normalisation checks that each fact is stored in one place only, so updates cannot leave the data contradicting itself. The design was tested against the first three normal forms.
+Normalisation for Meridon Store checks that every piece of data given to the system is stored in one place, so updates don't leave the database contradicting itself.
 
 ## Starting point: one flat order record
 Without normalisation, an order might be stored as a single row:
 
 | order_id | customer_name | customer_email | warehouse_name | warehouse_address | products | quantities | prices |
 |---|---|---|---|---|---|---|---|
-| 101 | Ada | ada@mail.com | Island | 12 Admiralty Way | Omega 3, Dog Joint Chews | 2, 1 | 8500, 12000 |
+| 101 | Ada | ada@icloud.com | Island | 12 Admiralty Way | Omega 3, Dog Joint Chews | 2, 1 | 8500, 12000 |
 
-This causes three problems:
-- **Update problem:** if Ada changes her email, every one of her orders must be changed, and missing one leaves conflicting data.
-- **Insert problem:** a new product cannot be recorded until someone orders it.
-- **Delete problem:** deleting Ada's only order also deletes the only record of Ada as a customer.
+To stop orders, customers and products from being mixed into the same rows, each one gets its own table. For example, if a customer like Ada changes her email from ada@icloud.com to ada@gmail.com, it only changes in one place, and we still know she's the same customer with the same order history. If she deletes or cancels an order, her customer record doesn't disappear with it. And because products have their own table, a new product can be added to the store before anyone has ordered it.
 
-## First normal form (1NF)
-**Rule:** each cell holds a single value, and there are no repeating groups.
+## The three normal forms
+There are three normal forms.
 
-The products, quantities and prices columns above each hold lists. They are moved into a separate **OrderItem** table with one row per product per order. In the final design every column holds one value, and every table has a primary key.
+**First normal form** means each product in an order gets its own row, so no cell holds a list. That is why OrderItem is its own table.
 
-## Second normal form (2NF)
-**Rule:** every non-key column depends on the whole primary key, not part of it.
+**Second normal form** means every column depends on the whole key, not just part of it. For example, a product's name belongs in Product while the order's details belong in Orders, so they're not mixed together. This can't happen in my design, because every table has a single ID.
 
-Partial dependency can only happen when a key has more than one column. In the 1NF version, an order line is identified by (order_id, product_id), and the product's name and current price depend on product_id alone. These columns are moved to **Product**, and only the facts about that line (quantity and unit_price) stay in **OrderItem**.
+**Third normal form** means no column describes something else. A warehouse's address goes in Warehouse, not in Orders, because it describes the warehouse, not the order. In the same way, customer details stay in Customer, and rider and staff details stay in Rider and Staff, with other tables only holding their IDs.
 
-In the final design every table uses a single-column primary key, so no partial dependency is possible. OrderItem also has a unique pair (order_id, product_id), and its quantity and unit_price depend on that whole pair.
+Species is dog or cat for pet products and empty for human products. It isn't repeating category, because knowing a product is for pets doesn't tell you if it's for a dog or a cat.
 
-## Third normal form (3NF)
-**Rule:** no non-key column depends on another non-key column.
+## Repeated data I kept on purpose
+Some data looks repeated, but it's actually recording something different.
+- **OrderItem.unit_price** is what the customer paid at the time they ordered. Product.price can go up or down later, but that shouldn't change what someone already paid.
+- **Orders.delivery_address** is where that order was actually sent. If a customer moves house, their old orders should still show the old address.
+- **Payment.amount** is what was charged in that payment attempt. I store it instead of adding up the items again, because the payment record should show what really happened.
+- **Delivery.status** could be worked out from the timestamps, but I kept it because it makes it easy to check what stage a delivery is at. The check constraints stop the status and timestamps from disagreeing.
 
-In the 1NF version, customer_name and customer_email depend on the customer, not the order, and warehouse_address depends on warehouse_name. These are moved out:
-- Customer details go to **Customer**, and Orders keeps only customer_id.
-- Warehouse details go to **Warehouse**, and Orders and StockBatch keep only warehouse_id.
-- Rider and staff details go to **Rider** and **Staff**, and Delivery keeps only rider_id and assigned_by_staff_id.
-
-Each remaining column describes only the row its key identifies:
-
-| Table | Every non-key column describes… |
-|---|---|
-| Warehouse | the warehouse |
-| Customer | the customer |
-| Product | the product |
-| StockBatch | that batch of stock |
-| Orders | the order as placed |
-| OrderItem | one product line in one order |
-| Payment | one payment attempt |
-| Staff | the staff member |
-| Rider | the rider |
-| Delivery | the delivery of one order |
-
-Product.species is not a 3NF problem. Category does not determine species (a pet product can be for a dog or a cat), so species is an independent fact about the product.
-
-## Deliberate repeated data
-Some columns look like duplication but record a different fact.
-
-- **OrderItem.unit_price** is not a copy of Product.price. It is the price at the moment of the order (rule 11). Product.price can change later, but past orders must not.
-- **Orders.delivery_address** is not a copy of Customer.delivery_address. It is where this order was sent. A customer who moves house should not change the address on past orders.
-- **Payment.amount** is stored even though the order total can be calculated from OrderItem. It records what was actually charged in that attempt, which is what the payment record must show.
-- **Delivery.status** could be worked out from the timestamps (picked_up_at and delivered_at). It is kept as its own column so the current stage is easy to query and filter, and check constraints keep it consistent with the timestamps.
+## How the design changed
+- **Total price on Orders.** At first I had a total_price column on Orders. I took it out because the total can be worked out from OrderItem (quantity × unit_price), and if I stored it as well, the two could end up different.
+- **Species for human products.** At first I gave human products the species 'human'. But that was just repeating the category, and the store doesn't sell for a 'human' species. So I changed it to NULL, and now only pet products have a species.
+- **Rider status.** At first rider status was 'busy' or 'available'. But you can tell if a rider is busy by checking if they have a delivery that isn't finished, so storing it could go out of date. I changed it to 'active' or 'inactive', which shows if the rider still works for the store.
 
 ## Result
-All ten tables are in third normal form. The only repeated values are historical snapshots or deliberate, controlled exceptions, each explained above.
+All the tables are in third normal form. The only repeated values are snapshots of what was true at the time, which I kept on purpose.

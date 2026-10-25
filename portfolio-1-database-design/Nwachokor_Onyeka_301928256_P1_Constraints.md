@@ -19,6 +19,9 @@ Each foreign key can only hold a value that exists in the table it points to. Th
 | Delivery.rider_id | Rider | Restrict | Past deliveries keep their rider |
 | Delivery.assigned_by_staff_id | Staff | Restrict | Keeps the record of who assigned the delivery |
 
+- StockBatch.product_id and StockBatch.warehouse_id are both required, so every batch belongs to exactly one product and one warehouse (rule 4).
+- Orders.warehouse_id is a single required foreign key, so every order is fulfilled from exactly one warehouse (rule 10).
+
 ## 3. Unique constraints
 - Customer.email: no two customers share an email (rule 18).
 - Staff.email: each staff login is unique.
@@ -52,9 +55,12 @@ Every column is required, except:
 Some rules involve more than one row or table, so a single column check cannot enforce them.
 
 - Rule 13 (only one successful payment per order): a partial unique index on Payment.order_id, applied only where status is 'success'.
-- Rules 7, 8 and 10 (no expired stock, earliest expiry first, one warehouse per order): handled by the order-placement transaction, which takes stock only from unexpired batches in the order's warehouse, earliest expiry first.
-- Rule 9 (at least one item per order): the order and its items are inserted in the same transaction, and the order is rejected if it has no items.
-- Rule 11 (price recorded at time of order): unit_price is copied from Product when the item is added and never updated afterwards.
+- Rules 7 and 8 (no expired stock, earliest expiry first): the order-placement transaction takes stock only from unexpired batches in the order's warehouse, earliest expiry first.
+- Rule 9 (at least one item per order): an order row is inserted before its items, so a normal constraint cannot check this. A deferred trigger checks at commit time that the order has at least one item, and rolls the transaction back if not.
+- Rule 11 (price fixed at time of order): unit_price is copied from Product when the item is added, and a trigger blocks any later update to it.
 - Rule 14 (no dispatch before payment): a trigger blocks creating a delivery unless the order has a successful payment.
 - Rule 16 (status only moves forward): a trigger rejects any update that moves a delivery's status backwards.
-- Rule 17 (delivery confirmed by code): the status can only change to 'delivered' when the code entered by the rider matches Delivery.delivery_code.
+- Rule 17 (delivery confirmed by code): the code the rider enters is not stored. The application compares it with Delivery.delivery_code and only sets the status to 'delivered' if they match.
+
+## 7. Known limitation
+OrderItem records which product was sold but not which batch it came from. Stock is deducted earliest-expiry-first (rule 8), but afterwards the database cannot show which batch an item was taken from, so a recalled batch cannot be traced to the customers who received it. Adding an OrderItemBatch table (order_item_id, batch_id, quantity) would fix this, but it is outside the scope of this design.
