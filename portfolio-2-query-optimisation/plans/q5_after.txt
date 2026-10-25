@@ -1,0 +1,28 @@
+Q5 Best sellers, after indexes
+
+QUERY PLAN                                                                             
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=2706.53..2706.55 rows=10 width=23) (actual time=22.153..22.161 rows=10 loops=1)
+   ->  Sort  (cost=2706.53..2707.03 rows=200 width=23) (actual time=22.151..22.157 rows=10 loops=1)
+         Sort Key: (sum(oi.quantity)) DESC
+         Sort Method: top-N heapsort  Memory: 26kB
+         ->  HashAggregate  (cost=2700.21..2702.21 rows=200 width=23) (actual time=22.061..22.098 rows=200 loops=1)
+               Group Key: p.product_id
+               Batches: 1  Memory Usage: 48kB
+               ->  Hash Join  (cost=679.08..2658.81 rows=8280 width=19) (actual time=3.325..20.715 rows=8229 loops=1)
+                     Hash Cond: (oi.product_id = p.product_id)
+                     ->  Hash Join  (cost=672.58..2630.11 rows=8280 width=8) (actual time=3.243..19.331 rows=8229 loops=1)
+                           Hash Cond: (oi.order_id = o.order_id)
+                           ->  Seq Scan on order_item oi  (cost=0.00..1695.01 rows=100001 width=12) (actual time=0.003..6.376 rows=100001 loops=1)
+                           ->  Hash  (cost=620.83..620.83 rows=4140 width=4) (actual time=3.224..3.226 rows=4101 loops=1)
+                                 Buckets: 8192  Batches: 1  Memory Usage: 209kB
+                                 ->  Bitmap Heap Scan on orders o  (cost=80.38..620.83 rows=4140 width=4) (actual time=1.223..2.570 rows=4101 loops=1)
+                                       Recheck Cond: (order_date >= (now() - '30 days'::interval))
+                                       Heap Blocks: exact=468
+                                       ->  Bitmap Index Scan on idx_orders_date  (cost=0.00..79.35 rows=4140 width=0) (actual time=1.132..1.132 rows=4101 loops=1)
+                                             Index Cond: (order_date >= (now() - '30 days'::interval))
+                     ->  Hash  (cost=4.00..4.00 rows=200 width=15) (actual time=0.076..0.077 rows=200 loops=1)
+                           Buckets: 1024  Batches: 1  Memory Usage: 18kB
+                           ->  Seq Scan on product p  (cost=0.00..4.00 rows=200 width=15) (actual time=0.008..0.035 rows=200 loops=1)
+ Planning Time: 0.511 ms
+ Execution Time: 22.225 ms

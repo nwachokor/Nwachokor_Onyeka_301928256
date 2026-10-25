@@ -1,0 +1,15 @@
+Q1 Stock picking, after indexes
+
+QUERY PLAN                                                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=15.21..15.22 rows=5 width=16) (actual time=0.052..0.054 rows=8 loops=1)
+   Sort Key: expiry_date
+   Sort Method: quicksort  Memory: 25kB
+   ->  Bitmap Heap Scan on stock_batch  (cost=4.34..15.15 rows=5 width=16) (actual time=0.030..0.043 rows=8 loops=1)
+         Recheck Cond: ((product_id = 1) AND (warehouse_id = 1) AND (expiry_date > CURRENT_DATE))
+         Filter: (quantity > 0)
+         Heap Blocks: exact=8
+         ->  Bitmap Index Scan on idx_stock_batch_product_wh_expiry  (cost=0.00..4.34 rows=5 width=0) (actual time=0.023..0.023 rows=8 loops=1)
+               Index Cond: ((product_id = 1) AND (warehouse_id = 1) AND (expiry_date > CURRENT_DATE))
+ Planning Time: 0.301 ms
+ Execution Time: 0.075 ms

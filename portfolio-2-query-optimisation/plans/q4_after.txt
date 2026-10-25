@@ -1,0 +1,16 @@
+Q4 Daily revenue, after indexes
+
+QUERY PLAN                                                                     
+----------------------------------------------------------------------------------------------------------------------------------------------------
+ GroupAggregate  (cost=783.10..869.08 rows=3434 width=44) (actual time=2.718..3.536 rows=31 loops=1)
+   Group Key: (date(paid_at))
+   ->  Sort  (cost=783.10..791.71 rows=3447 width=12) (actual time=2.671..2.874 rows=3791 loops=1)
+         Sort Key: (date(paid_at))
+         Sort Method: quicksort  Memory: 245kB
+         ->  Bitmap Heap Scan on payment  (cost=67.01..580.57 rows=3447 width=12) (actual time=0.402..1.841 rows=3791 loops=1)
+               Recheck Cond: ((paid_at >= (CURRENT_DATE - '30 days'::interval)) AND (status = 'success'::text))
+               Heap Blocks: exact=436
+               ->  Bitmap Index Scan on idx_payment_success_date  (cost=0.00..66.15 rows=3447 width=0) (actual time=0.341..0.341 rows=3791 loops=1)
+                     Index Cond: (paid_at >= (CURRENT_DATE - '30 days'::interval))
+ Planning Time: 0.386 ms
+ Execution Time: 3.575 ms
