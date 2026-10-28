@@ -9,9 +9,9 @@ This portfolio uses the Meridon Store database to show how transactions keep the
 4. **Concurrency problem and fix:** Two customers try to buy 4 of the last 5 tubs at the same time. Without locking, both orders go through and stock is oversold. With SELECT ... FOR UPDATE, the second customer waits and sees the real stock.
 
 ## How to run
-1. Load `../portfolio-1-database-design/schema.sql` and `../portfolio-2-query-optimisation/seed_data.sql`.
-2. Run `setup.sql` before each demo. It resets Test Omega 3 to exactly 5 tubs.
-3. Run `commit_rollback.sql` in one session (part 1, then part 2).
+1. Load `../portfolio-1-database-design/Nwachokor_Onyeka_301928256_P1_Schema.sql and `../portfolio-2-query-optimisation/Nwachokor_Onyeka_301928256_P2_SeedData.sql`.
+2. Run `Nwachokor_Onyeka_301928256_P3_Setup.sql` before each demo. It resets Test Omega 3 to exactly 5 tubs.
+3. Run `Nwachokor_Onyeka_301928256_P3_CommitRollback.sql` in one session (part 1, then part 2).
 4. For isolation, race and fix, open two terminals (Session A and Session B) and follow the steps in each .md file.
 
 ## Files
@@ -19,7 +19,7 @@ This portfolio uses the Meridon Store database to show how transactions keep the
 |---|---|
 | `Nwachokor_Onyeka_301928256_P3_Setup.sql` | Test customer, test product and a batch of 5 tubs; resets the test data each run |
 | `Nwachokor_Onyeka_301928256_P3_CommitRollback.sql` | Demo 1 (commit) and demo 2 (rollback) |
-| `isolation.md` | Read committed and repeatable read, step by step |
+| `Nwachokor_Onyeka_301928256_P3_Isolation.md` | Read committed and repeatable read, step by step |
 | `Nwachokor_Onyeka_301928256_P3_Race.md` | The lost update: stock oversold without locking |
 | `Nwachokor_Onyeka_301928256_P3_Fix.md` | The fix using SELECT ... FOR UPDATE |
 | `screenshots/` | Evidence for every demo |

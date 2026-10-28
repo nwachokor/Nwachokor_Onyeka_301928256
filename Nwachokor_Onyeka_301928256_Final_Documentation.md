@@ -53,6 +53,10 @@ I used Claude (Anthropic) during this portfolio, including Claude Code to review
 - **How I checked it:** I ran every script and query myself, and all results, timings and screenshots come from my own runs. I reviewed and edited the written files so they reflect my understanding, and I left out anything I couldn't explain myself.
 
 ## 6. References
-- PostgreSQL Global Development Group. *PostgreSQL 16 Documentation*. https://www.postgresql.org/docs/16/
-- MongoDB, Inc. *MongoDB Manual*. https://www.mongodb.com/docs/manual/
-- Docker, Inc. *Docker Documentation*. https://docs.docker.com/
+- PostgreSQL Global Development Group. (n.d.). PostgreSQL 16 documentation. Retrieved October 28, 2026, from https://www.postgresql.org/docs/16/
+
+- MongoDB, Inc. (n.d.). MongoDB manual. Retrieved October 28, 2026, from https://www.mongodb.com/docs/manual/
+
+- Docker, Inc. (n.d.). Docker documentation. Retrieved October 28, 2026, from https://docs.docker.com/
+
+- Keep them in that order, since APA lists references alphabetically. That’s the last of the quick fixes. After this come the bigger write-ups, starting with the Fix.md trade-off section.

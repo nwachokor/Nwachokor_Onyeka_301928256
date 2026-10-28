@@ -25,7 +25,7 @@ CREATE TABLE product (
   category    TEXT NOT NULL CHECK (category IN ('human', 'pet')), -- rule 1
   species     TEXT,
   CHECK (                                                         -- rule 2
-    (category = 'pet'   AND species IN ('dog', 'cat')) OR
+    (category = 'pet'   AND species IS NOT NULL AND species IN ('dog', 'cat')) OR
     (category = 'human' AND species IS NULL)
   )
 );
@@ -119,7 +119,6 @@ CREATE CONSTRAINT TRIGGER trg_order_has_items
   DEFERRABLE INITIALLY DEFERRED
   FOR EACH ROW EXECUTE FUNCTION order_has_items();
 
--- rule 11: unit_price cannot change after the item is added
 CREATE FUNCTION lock_unit_price() RETURNS trigger AS $$
 BEGIN
   IF NEW.unit_price <> OLD.unit_price THEN

@@ -64,3 +64,5 @@ Some rules involve more than one row or table, so a single column check cannot e
 
 ## 7. Known limitation
 OrderItem records which product was sold but not which batch it came from. Stock is deducted earliest-expiry-first (rule 8), but afterwards the database cannot show which batch an item was taken from, so a recalled batch cannot be traced to the customers who received it. Adding an OrderItemBatch table (order_item_id, batch_id, quantity) would fix this, but it is outside the scope of this design.
+
+- The schema requires picked_up_at to be filled in once a delivery's status is 'picked_up'

@@ -10,10 +10,9 @@ This portfolio uses the Meridon Store database from Portfolio 1 to write realist
 5. **Best sellers:** Which ten products sold the most units in the last month?
 
 ## How to run
-1. Load `../portfolio-1-database-design/Nwachokor_Onyeka_301928256_P2_SeedData.sql` to create a fresh database.
+1. Load `../portfolio-1-database-design/Nwachokor_Onyeka_301928256_P1_Schema.sql` to create a fresh database.
 2. Run `Nwachokor_Onyeka_301928256_P2_SeedData.sql` to fill it with sample data.
-3. Run each query in `Nwachokor_Onyeka_301928256_P2_Queries.sql
-` with EXPLAIN ANALYZE and save the plans as the "before" results.
+3. Run each query in `Nwachokor_Onyeka_301928256_P2_Queries.sql` with EXPLAIN ANALYZE and save the plans as the "before" results.
 4. Run `Nwachokor_Onyeka_301928256_P2_Indexes.sql` to add the indexes.
 5. Run each query again with EXPLAIN ANALYZE and save the plans as the "after" results.
 
@@ -21,12 +20,11 @@ This portfolio uses the Meridon Store database from Portfolio 1 to write realist
 | File / folder | What it contains |
 |---|---|
 | `Nwachokor_Onyeka_301928256_P2_SeedData.sql` | Sample data: 2 warehouses, 5,000 customers, 200 products, 2,000 stock batches, 50,000 orders with items, payments and deliveries |
-| `Nwachokor_Onyeka_301928256_P2_Queries.sql
-` | The five queries, one for each business question |
+| `Nwachokor_Onyeka_301928256_P2_Queries.sql` | The five queries, one for each business question |
 | `Nwachokor_Onyeka_301928256_P2_Indexes.sql` | One index for each query, including two partial indexes |
 | `plans/` | EXPLAIN ANALYZE output for each query, before and after indexes (q1_before.txt to q5_after.txt) |
 | `screenshots/` | Seed data loaded, table sizes, query results (q1_result.png to q5_result.png) and indexes created |
-| `analysis.md` | What changed in each plan and why |
+| `Nwachokor_Onyeka_301928256_P2_Analysis.md` | What changed in each plan and why |
 
 ## Results summary
 | Query | Time before (ms) | Time after (ms) | Index used |

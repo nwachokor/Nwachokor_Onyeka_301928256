@@ -12,13 +12,13 @@ Meridon sells its own stock rather than acting as a marketplace for other seller
 - Delivery Riders: Update delivery statuses and confirm drop-offs at the customer's address.
 
 ## Major data
-- Products: name, price, weight, category (human or pet), and species for pet products
+- Products: name, price, weight_g, category (human or pet), and species for pet products
 - Stock batches: quantity, expiry date, and warehouse location.
 - Warehouses: Mainland and Island locations.
-- Customers: name, deivery address and contact details
+- Customers: name, delivery address and contact details
 - Orders & Items: Order records and the specific items included in each order.
 - Payments: method (card or transfer), amount and status
-- Deliveries: addigned rider, status, timestamps and confirmation code
+- Deliveries: assigned rider, status, timestamps and confirmation code
 
 ## Main operations
 - Staff add and remove products and record new stock batches.

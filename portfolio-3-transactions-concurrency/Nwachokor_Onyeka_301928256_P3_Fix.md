@@ -22,4 +22,16 @@ The update also uses `quantity = quantity - 4` instead of a fixed number, so it 
 
 Screenshots: `screenshots/fix_b_waiting.png`, `screenshots/fix_result.png`
 
-## My notes
+Left column = Session A, right column = Session B.
+
+## Trade-off
+
+**The cost:** FOR UPDATE makes other customers wait. If lots of people buy the same product at the same time, they queue one by one on that stock row, so the app slows down at busy times like a sale.
+
+**The risk:** if two transactions lock rows in opposite order, for example A locks Omega 3 then Fish Oil while B locks Fish Oil then Omega 3, they end up waiting for each other forever. That's a deadlock. Postgres spots it and cancels one of them, so the app has to be ready to retry that order.
+
+**Other options:**
+- An atomic update: `UPDATE stock_batch SET quantity = quantity - 4 WHERE product_id = ... AND quantity >= 4;` If it says UPDATE 0, there wasn't enough stock, so the order is refused. It's one step, so there's no gap between reading and saving.
+- SERIALIZABLE isolation, where Postgres cancels one of the clashing transactions and the app retries it.
+
+**Why I chose FOR UPDATE:** it's the easiest to show step by step in two terminals, since you can actually see Session B waiting. It's also clear to read: lock the row, check the stock, then save. For Meridon, where most products aren't bought by many people at once, the waiting cost is small.

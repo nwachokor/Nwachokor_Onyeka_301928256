@@ -20,7 +20,7 @@ PK = primary key, FK = foreign key.
 - product_id (PK)
 - name
 - price
-- weight (in grams)
+- weight_g (in grams)
 - category (human or pet)
 - species (dog or cat; empty for human products)
 

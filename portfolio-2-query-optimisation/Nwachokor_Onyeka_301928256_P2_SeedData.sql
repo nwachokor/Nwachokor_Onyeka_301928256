@@ -1,5 +1,5 @@
 -- Meridon Store seed data (Portfolio 2)
--- Run on a freshly loaded schema.sql so IDs start at 1.
+-- Run on a freshly loaded '../portfolio-1-database-design/Nwachokor_Onyeka_301928256_P1_Schema.sql' so IDs start at 1.
 
 BEGIN;
 

@@ -9,14 +9,29 @@ Without normalisation, an order might be stored as a single row:
 |---|---|---|---|---|---|---|---|
 | 101 | Ada | ada@icloud.com | Island | 12 Admiralty Way | Omega 3, Dog Joint Chews | 2, 1 | 8500, 12000 |
 
-To stop orders, customers and products from being mixed into the same rows, each one gets its own table. For example, if a customer like Ada changes her email from ada@icloud.com to ada@gmail.com, it only changes in one place, and we still know she's the same customer with the same order history. If she deletes or cancels an order, her customer record doesn't disappear with it. And because products have their own table, a new product can be added to the store before anyone has ordered it.
+To stop orders, customers and products from being mixed into the same rows, each one gets its own table. That fixes three problems with the flat record:
+
+- **Update anomaly:** if Ada changes her email from ada@icloud.com to ada@gmail.com, it only changes in one place, and we still know she's the same customer with the same order history.
+- **Delete anomaly:** if she deletes or cancels an order, her customer record doesn't disappear with it.
+- **Insert anomaly:** because products have their own table, a new product can be added to the store before anyone has ordered it.
 
 ## The three normal forms
 There are three normal forms.
 
 **First normal form** means each product in an order gets its own row, so no cell holds a list. That is why OrderItem is its own table.
 
-**Second normal form** means every column depends on the whole key, not just part of it. For example, a product's name belongs in Product while the order's details belong in Orders, so they're not mixed together. This can't happen in my design, because every table has a single ID.
+**Second normal form** means every column depends on the whole key, not just part of it.
+
+Imagine OrderItem with the key (order_id, product_id), and it also stored product_name:
+
+| order_id | product_id | product_name | quantity | unit_price |
+|---|---|---|---|---|
+| 101 | 7 | Omega 3 | 2 | 8500 |
+| 102 | 7 | Omega 3 | 1 | 8500 |
+
+product_name depends only on product_id, not on the whole key. That's a partial dependency, which breaks 2NF. So the name moves to the Product table.
+
+quantity and unit_price depend on both together, meaning how many of this product were in this order and at what price, so they stay in OrderItem.
 
 **Third normal form** means no column describes something else. A warehouse's address goes in Warehouse, not in Orders, because it describes the warehouse, not the order. In the same way, customer details stay in Customer, and rider and staff details stay in Rider and Staff, with other tables only holding their IDs.
 

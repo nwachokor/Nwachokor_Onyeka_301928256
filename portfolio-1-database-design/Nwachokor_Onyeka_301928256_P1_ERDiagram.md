@@ -21,7 +21,7 @@ erDiagram
         int product_id PK
         string name
         decimal price
-        float weight
+        decimal weight_g
         string category
         string species
     }
@@ -92,29 +92,26 @@ erDiagram
     Staff ||--o{ Delivery : assigns
 ```
 
-## PK (primary key)
-- Every table has one: customer_id, product_id…
-- No two rows can share the same value
-- Can never be empty
-- Not the same as "rows can't look alike": two customers can share a name
+## Primary keys (PK)
+Every table has its own ID column, like customer_id or product_id, and that's its primary key. No two rows can have the same ID, and it can never be empty. That's how the database tells rows apart. Two customers could both be called Ada and live on the same street, but they'd still have different customer_ids, so they're never mixed up.
 
-## FK (foreign key)
-- A column holding another table's PK; it points to a row there
-- e.g. orders.customer_id → which customer placed the order
-- Can only hold a value that exists in the other table
-- The table holding the FK is the "many" side
+## Foreign keys (FK)
+A foreign key is a column that holds another table's ID, so it points to a row in that table. For example, Orders.customer_id says which customer placed the order. The database only lets it hold an ID that actually exists, so you can't save an order for customer 9999 if there's no customer 9999. The table with the foreign key is always the "many" side: one customer can have many orders, but each order has only one customer.
 
-## UK (unique)
-- No two rows can have the same value in that column
-- Customer email (rule 18), staff email, warehouse name
-- Delivery.order_id, which is what makes Orders → Delivery one-to-one
+## Unique columns (UK)
+A unique column can't have the same value twice. I used it for customer email (rule 18), so two accounts can't share one email, and for staff email and warehouse name. Delivery.order_id is unique too, which is what makes it one delivery per order (rule 15).
 
-## The symbols
-- || exactly one · o| zero or one · o{ zero or many · |{ one or many
-- Customer ||--o{ Orders: a customer can have no orders yet
-- Orders ||--|{ OrderItem: an order must have at least one item (rule 9)
-- Orders ||--o| Delivery: no delivery until paid (rule 14)
+## Reading the lines
+Each end of a line shows how many rows can be on that side:
+- `||` exactly one
+- `o|` zero or one
+- `o{` zero or many
+- `|{` one or many
+
+Some Meridon examples:
+- **Customer ||--o{ Orders:** a new customer can sign up and have no orders yet, but every order belongs to exactly one customer.
+- **Orders ||--|{ OrderItem:** an order has at least one item (rule 9). The diagram shows the rule, and a trigger in the schema enforces it.
+- **Orders ||--o| Delivery:** an order can exist without a delivery, because a delivery is only created after payment. The diagram allows that gap, and a trigger enforces the "no delivery until paid" part (rule 14).
 
 ## Delivery timestamps
-- picked_up_at and delivered_at are empty when the delivery is created
-- They're filled in as the status moves forward
+picked_up_at and delivered_at are empty when a delivery is first assigned. They get filled in as the status moves forward, and the schema checks that they match the status. A delivery marked 'picked_up' must have picked_up_at, and one marked 'delivered' must have both.
