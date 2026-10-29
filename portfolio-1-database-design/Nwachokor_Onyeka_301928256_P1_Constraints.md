@@ -50,7 +50,7 @@ Every column is required, except:
 | – | Payment.status must be 'pending', 'success' or 'failed'; paid_at must be filled when status is 'success' |
 | – | Rider.status must be 'active' or 'inactive' |
 | 16 | Delivery.status must be 'assigned', 'picked_up' or 'delivered'; delivered_at must be filled when status is 'delivered' |
-| – | Delivery.picked_up_at must be filled when status is 'picked_up' |.
+| – | Delivery.picked_up_at must be filled when status is 'picked_up' |
 
 ## 6. Rules enforced beyond simple constraints
 Some rules involve more than one row or table, so a single column check cannot enforce them.
