@@ -38,4 +38,4 @@ This portfolio uses the Meridon Store database from Portfolio 1 to write realist
 ## Notes
 - Timings come from one run each, so they can vary slightly between runs.
 - The seed data uses random values, so exact rows and times will differ if it's reloaded.
-- Full explanations are in analysis.md.
+- Full explanations are in Nwachokor_Onyeka_301928256_P2_Analysis.md.

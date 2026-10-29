@@ -2,7 +2,7 @@
 
 The fix is to lock the stock row when reading it. SELECT ... FOR UPDATE makes the second customer wait until the first one has finished, so they read the real stock instead of an old value.
 
-Run setup.sql first so the batch starts at 5 tubs.
+Run Nwachokor_Onyeka_301928256_P3_Setup.sql first so the batch starts at 5 tubs.
 
 | Step | Session A (customer 1) | Session B (customer 2) |
 |---|---|---|

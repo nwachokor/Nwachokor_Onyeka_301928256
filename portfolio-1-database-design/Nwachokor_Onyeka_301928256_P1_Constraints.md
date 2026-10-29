@@ -50,6 +50,7 @@ Every column is required, except:
 | – | Payment.status must be 'pending', 'success' or 'failed'; paid_at must be filled when status is 'success' |
 | – | Rider.status must be 'active' or 'inactive' |
 | 16 | Delivery.status must be 'assigned', 'picked_up' or 'delivered'; delivered_at must be filled when status is 'delivered' |
+| – | Delivery.picked_up_at must be filled when status is 'picked_up' |.
 
 ## 6. Rules enforced beyond simple constraints
 Some rules involve more than one row or table, so a single column check cannot enforce them.
@@ -65,4 +66,3 @@ Some rules involve more than one row or table, so a single column check cannot e
 ## 7. Known limitation
 OrderItem records which product was sold but not which batch it came from. Stock is deducted earliest-expiry-first (rule 8), but afterwards the database cannot show which batch an item was taken from, so a recalled batch cannot be traced to the customers who received it. Adding an OrderItemBatch table (order_item_id, batch_id, quantity) would fix this, but it is outside the scope of this design.
 
-- The schema requires picked_up_at to be filled in once a delivery's status is 'picked_up'

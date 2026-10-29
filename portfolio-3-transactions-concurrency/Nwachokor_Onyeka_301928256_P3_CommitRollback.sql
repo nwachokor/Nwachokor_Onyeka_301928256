@@ -1,5 +1,5 @@
 -- Portfolio 3: commit and rollback
--- Run setup.sql first so the batch starts at 5 tubs.
+-- Run Nwachokor_Onyeka_301928256_P3_Setup.sql first so the batch starts at 5 tubs.
 
 -------------------------------------------------------------
 -- Part 1: COMMIT - a successful order for 2 tubs
